@@ -442,8 +442,10 @@ public class GatheringController {
 	  }
 	}
 	@GetMapping("gatheringSearchMap.do")
-	public String gatheringSearchMap() {
-		return "gathering/searchMap";
+	public ModelAndView gatheringSearchMap(String place) {
+		System.out.println("place: "+place);
+		ModelAndView mv = new ModelAndView("gathering/searchMap","place",place);
+		return mv;
 	}
 	
 //	private long getGaSeq(HttpServletRequest request) {

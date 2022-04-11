@@ -172,4 +172,8 @@ public class CustomerController {
 		service.qaReply(qaReply);
 		return "redirect:qaContent?qseq="+qaReply.getQseq();
 	}
+	@GetMapping("contact")
+	public String contact() {
+		return "customer/contactUs";
+	}
 }

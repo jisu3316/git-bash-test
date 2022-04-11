@@ -44,15 +44,8 @@
 </style>
 <script type="text/javascript" 
 		     src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-		     <script>
-		     var newValue;
-             // 모든 텍스트의 변경에 반응합니다.
-window.addEventListener('DOMContentLoaded', function() {
-	searchPlaces();
-})
-		     </script>
 </head>
-<body onload="searchPlaces();">
+<body >
 <div class="map_wrap">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
@@ -60,7 +53,7 @@ window.addEventListener('DOMContentLoaded', function() {
         <div class="option">
             <div>
                 <form  onsubmit="searchPlaces(); return false;">
-                    키워드 : <input type="text" value="" id="keyword" size="15" > 
+                    키워드 : <input type="text" value="${place}" id="keyword" size="15" > 
                     <button type="submit">검색하기</button> 
                 </form>
             </div>
@@ -71,59 +64,32 @@ window.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 <input type="text" id="placeName" name="placeName" value="">
-<input type="text" id="latitude" name="latitude" value="">
-<input type="text" id="longitude" name="longitude" value="">
-<input type="hidden" id="latitude2" name="latitude" value="">
-<input type="hidden" id="longitude2" name="longitude" value="">
+<input type="hidden" id="latitude" name="latitude" value="">
+<input type="hidden" id="longitude" name="longitude" value="">
 <div id="result"></div>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=11400a9267d93835389eb9255fcaad0b&libraries=services"></script>
 <script>
-navigator.geolocation.getCurrentPosition(function(pos) {
-    var latitude = pos.coords.latitude;
-    var longitude = pos.coords.longitude;
-    $('#latitude2').val(latitude);
-    $('#longitude2').val(longitude);
-    //alert("현재 위치는 : " + latitude + ", "+ longitude);
-    console.log("1: "+$('#latitude2').val());
-    getAddr($('#latitude2').val(),$('#longitude2').val());
-});
 
-/*let lat = 33.450701;
-let lng = 126.570667;
-getAddr(lat,lng);*/
-function getAddr(lat,lng){
-	console.log("2: "+$('#latitude2').val());
-    let geocoder = new kakao.maps.services.Geocoder();
-
-    let coord = new kakao.maps.LatLng(lat, lng);
-    let callback = function(result, status) {
-        if (status === kakao.maps.services.Status.OK) {
-        	console.log("result[0]: ",result);
-        	console.log("result[0].address.address_name: ",result[0].address.address_name);
-        	 $('#keyword').val(result[0].address.region_3depth_name);
-        }
-    };
-
-    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-}
 function search(index){
-	console.log("index: "+index);
 	var liId=index;
 	liId+="span";
 	var addressValue=$('#'+liId).text();
-	console.log("addressValue: "+addressValue);
+	$('#placeName').val(addressValue);
+	setParentText();
 }
-
+function searchPlaceName(index){
+	var h5Id=index;
+	h5Id+="h5";
+	var addressValue=$('#'+h5Id).text();
+	$('#placeName').val(addressValue);
+	setParentText();
+}
 function setParentText(){
     opener.document.getElementById("placeParent").value = document.getElementById("placeName").value
     window.close();
 }
 
-/*$("#keyword").on("propertychange change keyup paste input", function() {
-	f.submit();
-	searchPlaces();
-});*/
 
 
 // 마커를 담을 배열입니다
@@ -152,17 +118,18 @@ var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
 
 
-	
+	searchPlaces();
 
 // 키워드 검색을 요청하는 함수입니다
 	function searchPlaces() {
 		
 	    var keyword = document.getElementById('keyword').value;
-	
+		
 	    if (!keyword.replace(/^\s+|\s+$/g, '')) {
 	        alert('키워드를 입력해주세요!');
 	        return false;
 	    }
+	  
 	
 	    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
 	    ps.keywordSearch( keyword, placesSearchCB); 
@@ -300,7 +267,7 @@ function getListItem(index, places) {
     var el = document.createElement('li'),
     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info">' +
-                '   <h5>' + places.place_name + '</h5>';
+                '   <a href="javascript:searchPlaceName('+index+')" <h5 id="'+index+'h5">' + places.place_name + '</h5> </a>';
 
     if (places.road_address_name) {
         itemStr += '  <a href="javascript:search('+index+')"   <span id="'+index+'span">' + places.road_address_name + '</span> </a>' +

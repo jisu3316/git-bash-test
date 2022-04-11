@@ -48,6 +48,10 @@
                <mapping path="/groupTab/*"/>
                    <beans:bean id="LoginInterceptor" class="team1.togather.interceptor.LoginInterceptor"/>
         </interceptor>
+        <interceptor>
+               <mapping path="/**/"/>
+                   <beans:bean id="cookieInterceptor" class="team1.togather.interceptor.CookieInterceptor"/>
+        </interceptor>
     </interceptors>
 	
 	

@@ -356,7 +356,9 @@
       </div>
     </footer>
     <!-- End Footer -->
-
+	<input type="hidden" id="latitude2" name="latitude" value="">
+	<input type="hidden" id="longitude2" name="longitude" value="">
+	<input type="hidden" id="place" name="longitude" value="">
     <div id="preloader"></div>
     <a
       href="#"
@@ -373,12 +375,46 @@
 
     <!-- Template Main JS File -->
     <script src="/assets/js/main.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=11400a9267d93835389eb9255fcaad0b&libraries=services"></script>
     <script>
 		function searchMap(){
-			window.name="parentForm";
-			openWin = window.open(
-        	  "gatheringSearchMap.do", "gatheringSearchMap", 
-        	   "width=1000, height=530, top=100, left=100");
+			navigator.geolocation.getCurrentPosition(function(pos) {
+			    var latitude = pos.coords.latitude;
+			    var longitude = pos.coords.longitude;
+			    $('#latitude2').val(latitude);
+			    $('#longitude2').val(longitude);
+			    //alert("현재 위치는 : " + latitude + ", "+ longitude);
+			    console.log("1: "+$('#latitude2').val());
+			    getAddr($('#latitude2').val(),$('#longitude2').val());
+			});
+
+			/*let lat = 33.450701;
+			let lng = 126.570667;
+			getAddr(lat,lng);*/
+			function getAddr(lat,lng){
+				console.log("2: "+$('#latitude2').val());
+			    let geocoder = new kakao.maps.services.Geocoder();
+
+			    let coord = new kakao.maps.LatLng(lat, lng);
+			    let callback = function(result, status) {
+			        if (status === kakao.maps.services.Status.OK) {
+			        	console.log("result[0]: ",result);
+			        	console.log("result[0].address.address_name: ",result[0].address.address_name);
+			        	 $('#place').val(result[0].address.region_3depth_name);
+			        	 let place=$('#place').val();
+			 			console.log("place: "+place);
+			 			
+			 			window.name="parentForm";
+			 			openWin = window.open(
+			         	  "gatheringSearchMap.do?place="+place, "gatheringSearchMap", 
+			         	   "width=1000, height=530, top=100, left=100");
+			        }
+			    };
+
+			    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+			}
+			
+			
 		}
 	</script>
   </body>

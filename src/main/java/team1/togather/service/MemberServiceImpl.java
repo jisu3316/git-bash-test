@@ -203,5 +203,14 @@ public class MemberServiceImpl implements MemberService {
 	public String getMnameByMnum(Long mnum) {
 		return mapper.getMnameByMnum(mnum);
 	}
+	@Override
+	public void keepLogin(Map<String, Object> map) {
+		mapper.keepLogin(map);
+		
+	}
+	@Override
+	public Member checkUserWithSessionKey(String sessionKey) {
+		return mapper.checkUserWithSessionKey(sessionKey);
+	}
 	
 }

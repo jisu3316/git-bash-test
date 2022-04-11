@@ -256,7 +256,7 @@
                       <input
                         class="form-check-input"
                         type="checkbox"
-                        value=""
+                        name="useCookie"
                         id="form1Example3"
                         style="margin-right: 6px"
                       />
